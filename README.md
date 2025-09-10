@@ -75,9 +75,85 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 
 ## 🚀 3. Hình ảnh các chức năng
 
+<p align="center">
+  <img src="docs/anhGiaoDien.jpg" alt="Ảnh 1" width="800"/>
+</p>
 
+<p align="center">
+  <em>Hình 1: Ảnh giao diện chat giữa Client-Server  Hình 2: Ảnh 2 Client chat với Server</em>
+</p>
+
+<p align="center">
+  <img src="docs/anhClientChatServer.jpg" alt="Ảnh 2" width="300"/>
+</p>
+<p align="center">
+  <em> Hình 2: Ảnh 2 Client chat với Server</em>
+</p>
+
+<p align="center">
+  <img src="docs/anhServertraloiClientLA.jpg" alt="Ảnh 3" width="500"/>
+    <img src="docs/anhServertraloiClientHoa.jpg" alt="Ảnh 4" width="500"/>
+</p>
+<p align="center">
+  <em> Hình 3: Ảnh Server trả lời Client Lanh - Hình 4: Ảnh Server trả lời Client Hoa</em>
+</p>
+
+<p align="center">
+  <img src="docs/anhLichSuChatLuuTxt.jpg" alt="Ảnh 5" width="500"/>
+    <img src="docs/anhServerxoaDL.jpg" alt="Ảnh 6" width="300"/>
+</p>
+<p align="center">
+  <em> Hình 5: Ảnh lịch sử chat được lưu vào file txt - Hình 5: Ảnh Server xóa dữ liệu</em>
+</p>
+
+<p align="center">
+  <img src="docs/anhServerngatKetNoiClient.jpg" alt="Ảnh 7" width="600"/>
+</p>
+<p align="center">
+  <em> Hình 7: Ảnh Server ngắt kết nối với CLient</em>
+</p>
 
 ## 📝 4. Các bước cài đặt
+
+Yêu cầu hệ thống:
+
+    Java Development Kit (JDK) phiên bản 8 hoặc cao hơn.
+    Môi trường phát triển hoặc terminal để biên dịch và chạy mã.
+
+Các bước cài đặt và chạy
+
+Chuẩn bị mã nguồn:
+
+Tải hoặc sao chép hai file: Server.java và Client.java vào cùng một thư mục (package UngDungChat_TCP).
+
+
+Biên dịch mã nguồn:
+
+Mở terminal, điều hướng đến thư mục chứa file.
+
+Chạy lệnh:
+
+    textjavac UngDungChat_TCP/*.java
+
+Đảm bảo không có lỗi biên dịch.
+
+Chạy Server:
+
+Trong terminal, chạy:
+
+    textjava UngDungChat_TCP.Server
+
+Server sẽ khởi động và hiển thị giao diện, chờ kết nối từ client.
+
+Chạy Client:
+
+Mở một terminal mới (hoặc nhiều terminal để chạy nhiều client).
+
+Chạy:
+
+    textjava UngDungChat_TCP.Client
+
+Nhập tên client (ví dụ: "Lanh", "Hoa:) khi dialog xuất hiện, client sẽ kết nối đến server.
 
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
