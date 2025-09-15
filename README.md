@@ -45,22 +45,18 @@ Các chức năng chính:
 
 
 ## 🔧 2. Công nghệ sử dụng
-Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing
-
+Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
 #### Java Core và Multithreading:
-Sử dụng ExecutorService (thuộc gói java.util.concurrent) để quản lý một pool các luồng (thread) trên server, cho phép xử lý đồng thời nhiều kết nối client mà không cần tạo thủ công từng Thread. Điều này giúp cải thiện hiệu suất và quản lý tài nguyên hiệu quả hơn so với sử dụng Thread trực tiếp. Ví dụ: Executors.newFixedThreadPool() được dùng để giới hạn số luồng tối đa, mỗi luồng xử lý một client.
-
+Sử dụng ExecutorService (thuộc gói java.util.concurrent) để quản lý một pool các luồng (thread) trên server, cho phép xử lý đồng thời nhiều kết nối client mà không cần tạo thủ công từng Thread. Điều này giúp cải thiện hiệu suất và quản lý tài nguyên hiệu quả hơn so với sử dụng Thread trực tiếp. Ví dụ: Executors.newFixedThreadPool() được dùng để giới hạn số luồng tối đa, mỗi luồng xử lý một client.  
 #### Java Swing:
-Xây dựng giao diện đồ họa (GUI) cho client sử dụng các thành phần của gói javax.swing.*:
-
+Xây dựng giao diện đồ họa (GUI) cho client sử dụng các thành phần của gói javax.swing.*:  
+    
     JFrame: Cửa sổ chính của ứng dụng client.
     JTextArea: Hiển thị lịch sử tin nhắn, đặt trong JScrollPane để hỗ trợ cuộn khi số lượng tin nhắn dài.
     JTextField: Ô nhập liệu để người dùng gõ tin nhắn.
     JButton: Nút "Gửi" để gửi tin nhắn khi nhấn hoặc khi nhấn Enter.
-    JScrollPane: Bao quanh JTextArea để cung cấp thanh cuộn, cải thiện trải nghiệm người dùng.
-
-Swing cung cấp giao diện thân thiện, dễ tùy chỉnh mà không cần thư viện bên ngoài.
-
+    JScrollPane: Bao quanh JTextArea để cung cấp thanh cuộn, cải thiện trải nghiệm người dùng.  
+Swing cung cấp giao diện thân thiện, dễ tùy chỉnh mà không cần thư viện bên ngoài.  
 #### Java Sockets:
 Sử dụng gói java.net.* để triển khai kết nối mạng theo giao thức TCP:
 
@@ -197,5 +193,6 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
