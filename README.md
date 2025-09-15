@@ -9,9 +9,9 @@
 </h2>
 <div align="center">
     <p align="center">
-        <img src="docs/aiotlab_logo.png" alt="AIoTLab Logo" width="170"/>
-        <img src="docs/fitdnu_logo.png" alt="AIoTLab Logo" width="180"/>
-        <img src="docs/dnu_logo.png" alt="DaiNam University Logo" width="200"/>
+        <img src="images/aiotlab_logo.png" alt="AIoTLab Logo" width="170"/>
+        <img src="images/fitdnu_logo.png" alt="AIoTLab Logo" width="180"/>
+        <img src="images/dnu_logo.png" alt="DaiNam University Logo" width="200"/>
     </p>
 
 [![AIoTLab](https://img.shields.io/badge/AIoTLab-green?style=for-the-badge)](https://www.facebook.com/DNUAIoTLab)
@@ -34,7 +34,7 @@ Các chức năng chính:
 Hệ thống sử dụng TCP để đảm bảo truyền tin nhắn đáng tin cậy, không hỗ trợ mã hóa hoặc bảo mật nâng cao trong phiên bản cơ bản.
 
 ## 🔧 2. Công nghệ sử dụng
-Dưới đây là mô tả chi tiết về các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing, dựa trên yêu cầu của bạn:
+CCác công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing
 
 #### Java Core và Multithreading:
 Sử dụng ExecutorService (thuộc gói java.util.concurrent) để quản lý một pool các luồng (thread) trên server, cho phép xử lý đồng thời nhiều kết nối client mà không cần tạo thủ công từng Thread. Điều này giúp cải thiện hiệu suất và quản lý tài nguyên hiệu quả hơn so với sử dụng Thread trực tiếp. Ví dụ: Executors.newFixedThreadPool() được dùng để giới hạn số luồng tối đa, mỗi luồng xử lý một client.
@@ -76,7 +76,7 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 ## 🚀 3. Hình ảnh các chức năng
 
 <p align="center">
-  <img src="docs/anhGiaoDien.jpg" alt="Ảnh 1" width="800"/>
+  <img src="images/anhGiaoDien.jpg" alt="Ảnh 1" width="800"/>
 </p>
 
 <p align="center">
@@ -84,30 +84,30 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 </p>
 
 <p align="center">
-  <img src="docs/anhClientChatServer.jpg" alt="Ảnh 2" width="300"/>
+  <img src="images/anhClientChatServer.jpg" alt="Ảnh 2" width="300"/>
 </p>
 <p align="center">
   <em> Hình 2: Ảnh 2 Client chat với Server</em>
 </p>
 
 <p align="center">
-  <img src="docs/anhServertraloiClientLA.jpg" alt="Ảnh 3" width="500"/>
-    <img src="docs/anhServertraloiClientHoa.jpg" alt="Ảnh 4" width="500"/>
+  <img src="images/anhServertraloiClientLA.jpg" alt="Ảnh 3" width="500"/>
+    <img src="images/anhServertraloiClientHoa.jpg" alt="Ảnh 4" width="500"/>
 </p>
 <p align="center">
   <em> Hình 3: Ảnh Server trả lời Client Lanh - Hình 4: Ảnh Server trả lời Client Hoa</em>
 </p>
 
 <p align="center">
-  <img src="docs/anhLichSuChatLuuTxt.jpg" alt="Ảnh 5" width="500"/>
-    <img src="docs/anhServerxoaDL.jpg" alt="Ảnh 6" width="300"/>
+  <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 5" width="500"/>
+    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 6" width="300"/>
 </p>
 <p align="center">
   <em> Hình 5: Ảnh lịch sử chat được lưu vào file txt - Hình 5: Ảnh Server xóa dữ liệu</em>
 </p>
 
 <p align="center">
-  <img src="docs/anhServerngatKetNoiClient.jpg" alt="Ảnh 7" width="600"/>
+  <img src="images/anhServerngatKetNoiClient.jpg" alt="Ảnh 7" width="600"/>
 </p>
 <p align="center">
   <em> Hình 7: Ảnh Server ngắt kết nối với CLient</em>
@@ -194,3 +194,4 @@ java UngDungChat_TCP.Client
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
