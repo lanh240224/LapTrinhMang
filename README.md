@@ -47,34 +47,10 @@ Các chức năng chính:
 ## 🔧 2. Công nghệ sử dụng
 Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
 #### Java Core và Multithreading:
-Sử dụng ExecutorService (thuộc gói java.util.concurrent) để quản lý một pool các luồng (thread) trên server, cho phép xử lý đồng thời nhiều kết nối client mà không cần tạo thủ công từng Thread. Điều này giúp cải thiện hiệu suất và quản lý tài nguyên hiệu quả hơn so với sử dụng Thread trực tiếp. Ví dụ: Executors.newFixedThreadPool() được dùng để giới hạn số luồng tối đa, mỗi luồng xử lý một client.  
 #### Java Swing:
-Xây dựng giao diện đồ họa (GUI) cho client sử dụng các thành phần của gói javax.swing.*:  
-    
-    JFrame: Cửa sổ chính của ứng dụng client.
-    JTextArea: Hiển thị lịch sử tin nhắn, đặt trong JScrollPane để hỗ trợ cuộn khi số lượng tin nhắn dài.
-    JTextField: Ô nhập liệu để người dùng gõ tin nhắn.
-    JButton: Nút "Gửi" để gửi tin nhắn khi nhấn hoặc khi nhấn Enter.
-    JScrollPane: Bao quanh JTextArea để cung cấp thanh cuộn, cải thiện trải nghiệm người dùng.  
-Swing cung cấp giao diện thân thiện, dễ tùy chỉnh mà không cần thư viện bên ngoài.  
-#### Java Sockets:
-Sử dụng gói java.net.* để triển khai kết nối mạng theo giao thức TCP:
-
-    ServerSocket: Được server sử dụng để lắng nghe các kết nối đến trên một cổng cụ thể (ví dụ: port 1234). Phương thức accept() trả về Socket cho mỗi client kết nối.
-    Socket: Được client sử dụng để kết nối đến server thông qua địa chỉ IP và port.
-    DataInputStream và DataOutputStream: Xử lý việc đọc/ghi dữ liệu dạng nhị phân giữa client và server, đảm bảo truyền tin nhắn chính xác, tuần tự và không mất mát. 
-
-Đây là lựa chọn phù hợp khi cần truyền dữ liệu đơn giản như chuỗi văn bản.
-
+#### Java Sockets:  
 #### File I/O:
-
-Sử dụng các lớp trong gói java.io.* để lưu trữ và truy xuất lịch sử chat:
-
-    FileWriter hoặc BufferedWriter: Ghi tin nhắn vào file văn bản (ví dụ: chat_history.txt) theo chế độ append để không ghi đè dữ liệu cũ. Mỗi tin nhắn được lưu với định dạng như [Timestamp] - [Tên người dùng]: [Nội dung].
-    BufferedReader: Đọc lịch sử tin nhắn từ file để hiển thị khi client mới kết nối hoặc khi người dùng yêu cầu tải lịch sử.
-Sử dụng từ khóa synchronized hoặc Lock (từ java.util.concurrent.locks) để đảm bảo an toàn luồng (thread-safe) khi nhiều client gửi tin nhắn đồng thời, tránh xung đột ghi file.
-
-#### Hỗ trợ:
+#### Hỗ trợ:  
 
     java.util.Date hoặc java.time.LocalDateTime: Tạo timestamp cho mỗi tin nhắn để ghi vào file và hiển thị trên giao diện, giúp người dùng theo dõi thời gian gửi.
     ArrayList: Quản lý danh sách các client đang kết nối trên server (lưu trữ PrintWriter hoặc DataOutputStream của từng client) để broadcast tin nhắn. Có thể mở rộng để lưu danh sách tên người dùng và trạng thái online/offline.
@@ -193,6 +169,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
