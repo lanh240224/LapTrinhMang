@@ -28,35 +28,37 @@
 **Lưu trữ dữ liệu**: lịch sử chat được lưu vào file văn bản thay vì cơ sở dữ liệu, giúp triển khai đơn giản.  
 Các chức năng chính:  
 **🖥️ Chức năng của Server**:  
-Kết nối & Quản lý Client: Lắng nghe các yêu cầu kết nối, tạo luồng riêng cho từng Client, quản lý danh sách Client đang hoạt động.  
-Trung gian phân phối tin nhắn:
+1. Kết nối & Quản lý Client: Lắng nghe các yêu cầu kết nối, tạo luồng riêng cho từng Client, quản lý danh sách Client đang hoạt động.  
+2. Trung gian phân phối tin nhắn:
 
     Client gửi tin nhắn → Server nhận.
     Server chuyển tiếp tin nhắn đến tất cả Client khác.
     Các Client không giao tiếp trực tiếp mà thông qua Server.  
     
-Quản lý lịch sử chat: Lưu tin nhắn (có timestamp) vào file văn bản.  
-Xóa lịch sử: Cung cấp chức năng xóa toàn bộ file lưu trữ khi cần.  
-Xử lý lỗi & đóng kết nối: Khi Client ngắt kết nối hoặc lỗi I/O, Server loại bỏ Client khỏi danh sách và tiếp tục phục vụ các Client khác.  
+3. Quản lý lịch sử chat: Lưu tin nhắn (có timestamp) vào file văn bản.  
+4. Xóa lịch sử: Cung cấp chức năng xóa toàn bộ file lưu trữ khi cần.  
+5. Xử lý lỗi & đóng kết nối: Khi Client ngắt kết nối hoặc lỗi I/O, Server loại bỏ Client khỏi danh sách và tiếp tục phục vụ các Client khác.
+
 **💻 Chức năng của Client**:  
-Kết nối Server: Tạo socket đến Server theo IP + port.  
-Gửi tin nhắn: Người dùng nhập nội dung → Client gửi lên Server.  
-Nhận tin nhắn: Client lắng nghe phản hồi từ Server và hiển thị trong giao diện.  
-Giao diện người dùng (GUI): Cửa sổ chat có vùng hiển thị tin nhắn, ô nhập văn bản, nút gửi.  
-Quản lý trạng thái: Hiển thị thông báo khi mất kết nối, xử lý lỗi gửi/nhận.  
+1. Kết nối Server: Tạo socket đến Server theo IP + port.  
+2. Gửi tin nhắn: Người dùng nhập nội dung → Client gửi lên Server.  
+3. Nhận tin nhắn: Client lắng nghe phản hồi từ Server và hiển thị trong giao diện.  
+4. Giao diện người dùng (GUI): Cửa sổ chat có vùng hiển thị tin nhắn, ô nhập văn bản, nút gửi.  
+5. Quản lý trạng thái: Hiển thị thông báo khi mất kết nối, xử lý lỗi gửi/nhận.
+
 **🌐 Chức năng hệ thống**:  
-Giao thức TCP: Dùng ServerSocket và Socket, hỗ trợ nhiều Client đồng thời nhờ đa luồng.  
-Trung gian quản lý tin nhắn: Server giữ vai trò trung tâm, tất cả trao đổi giữa Client đều đi qua Server.  
-Lưu trữ dữ liệu: File I/O (append mode), ghi kèm thời gian (LocalDateTime).  
-Xử lý lỗi: Hiển thị lỗi trong GUI (Client), ghi log/debug ở Server.
+1. Giao thức TCP: Dùng ServerSocket và Socket, hỗ trợ nhiều Client đồng thời nhờ đa luồng.  
+2. Trung gian quản lý tin nhắn: Server giữ vai trò trung tâm, tất cả trao đổi giữa Client đều đi qua Server.  
+3. Lưu trữ dữ liệu: File I/O (append mode), ghi kèm thời gian (LocalDateTime).  
+4. Xử lý lỗi: Hiển thị lỗi trong GUI (Client), ghi log/debug ở Server.
 
 ## 🔧 2. Công nghệ sử dụng
 Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
-#### Java Core và Multithreading:
-#### Java Swing:
-#### Java Sockets:  
-#### File I/O:
-#### Hỗ trợ:  
+**Java Core và Multithreading**
+**Java Swing**
+**Java Sockets**  
+**File I/O**
+**Hỗ trợ**: 
 
     java.util.Date hoặc java.time.LocalDateTime: Tạo timestamp cho mỗi tin nhắn để ghi vào file và hiển thị trên giao diện, giúp người dùng theo dõi thời gian gửi.
     ArrayList: Quản lý danh sách các client đang kết nối trên server (lưu trữ PrintWriter hoặc DataOutputStream của từng client) để broadcast tin nhắn. Có thể mở rộng để lưu danh sách tên người dùng và trạng thái online/offline.
@@ -196,6 +198,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
