@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
@@ -31,6 +32,7 @@ public class Server {
     private ServerSocket serverSocket; // Socket server
     private List<ClientHandler> clients; // Danh sách các client
     private Map<String, ClientHandler> activeClients; // Lưu client theo tên
+    private Map<String, List<String>> offlineMessages = new ConcurrentHashMap<>(); // Hàng đợi tin nhắn offline theo tên người nhận
 
     // Constructor khởi tạo server
     public Server() {
@@ -364,12 +366,7 @@ public class Server {
                     chatArea.append("New client connected from: " + clientSocket.getInetAddress().getHostAddress() + "\n");
                 });
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
-                synchronized (clients) { 
-                    clients.add(clientHandler);  
-                }
                 clientHandler.start();        
-                updateClientSelector();       
-                broadcastClientList();        
             }
         } catch (IOException e) {        
             SwingUtilities.invokeLater(() -> {
@@ -385,7 +382,7 @@ public class Server {
         String message = inputField.getText().trim(); 
         if (!message.isEmpty() && clientSelector.getSelectedItem() != null) {
             String selectedClient = extractClientName(clientSelector.getSelectedItem().toString()); 
-            boolean messageSent = false;
+            // gửi ngay nếu online, nếu offline thì queue để phát khi online
             
             // Tìm client trong danh sách activeClients trước
             ClientHandler targetClient = activeClients.get(selectedClient);
@@ -393,22 +390,11 @@ public class Server {
                 targetClient.sendMessage("Server: " + message);
                 chatArea.append("Server: " + message + " (to " + selectedClient + ")\n");  
                 saveMessageToFile(selectedClient, "Server: " + message);
-                messageSent = true;
             } else {
-                // Fallback: tìm trong danh sách clients
-                for (ClientHandler client : clients) {
-                    if (client.getClientName() != null && client.getClientName().equals(selectedClient) && client.isConnected()) {
-                        client.sendMessage("Server: " + message); 
-                        chatArea.append("Server: " + message + " (to " + client.getClientName() + ")\n");  
-                        saveMessageToFile(client.getClientName(), "Server: " + message); 
-                        messageSent = true;
-                        break;
-                    }
-                }
-            }
-            
-            if (!messageSent) {
-                chatArea.append("Error: Could not send message to " + selectedClient + " (client not connected)\n");
+                // Client offline -> xếp hàng tin nhắn để gửi khi online
+                queueOfflineMessage(selectedClient, "Server: " + message);
+                saveMessageToFile(selectedClient, "Server: " + message);
+                chatArea.append("Queued offline to " + selectedClient + ": " + message + "\n");
             }
             
             inputField.setText("");          
@@ -506,16 +492,22 @@ public class Server {
         });
     }
 
-    // Gửi danh sách client 
+    // Gửi danh sách client với trạng thái online/offline, không trùng lặp
     private void broadcastClientList() {
-        StringBuilder clientList = new StringBuilder("clients:");
+        StringBuilder clientList = new StringBuilder("clients_status:");
         synchronized (clients) {
-            for (ClientHandler client : clients) {
-                if (client.getClientName() != null) {
-                    clientList.append(client.getClientName()).append(",");
+            // Duyệt theo activeClients để có đúng một handler cho mỗi tên
+            for (Map.Entry<String, ClientHandler> entry : activeClients.entrySet()) {
+                String name = entry.getKey();
+                ClientHandler handler = entry.getValue();
+                if (name != null && !name.trim().isEmpty()) {
+                    clientList.append(name)
+                              .append("|")
+                              .append(handler != null && handler.isConnected() ? "online" : "offline")
+                              .append(",");
                 }
             }
-            if (clientList.length() > 8) {
+            if (clientList.length() > "clients_status:".length()) {
                 clientList.setLength(clientList.length() - 1);
             }
             for (ClientHandler client : clients) {
@@ -590,15 +582,24 @@ public class Server {
                 loadChatHistory();
                 sendChatHistoryToClient();
 
+                // Gửi tin nhắn offline (nếu có) cho client vừa online
+                deliverOfflineMessagesIfAny();
+
                 String message;
                 while ((message = in.readLine()) != null && isConnected) {  
                     final String finalMessage = message;
                     SwingUtilities.invokeLater(() -> {
                         chatArea.append(clientName + ": " + finalMessage + "\n");  
                     });
-                    saveMessageToFile(clientName, clientName + ": " + message); 
-                    // Không broadcast tin nhắn client đến các client khác
-                    // Chỉ lưu vào lịch sử chat của client đó
+
+                    // Định dạng tin nhắn: to:<recipient>:<content>
+                    // (Tương thích ngược: nếu có thêm msgId vẫn xử lý)
+                    if (message.startsWith("to:")) {
+                        handleDirectMessage(message);
+                    } else {
+                        // Lưu vào lịch sử riêng của client nếu không đúng định dạng
+                        saveMessageToFile(clientName, clientName + ": " + message); 
+                    }
                 }
             } catch (IOException e) {         
                 SwingUtilities.invokeLater(() -> {
@@ -617,6 +618,52 @@ public class Server {
                     SwingUtilities.invokeLater(() -> {
                         chatArea.append("Error closing socket: " + e.getMessage() + "\n");
                     });
+                }
+            }
+        }
+
+        private void handleDirectMessage(String raw) {
+            // Hỗ trợ hai dạng:
+            // 1) to:RecipientName:Message content
+            // 2) to:RecipientName:MessageId:Message content (bỏ qua msgId)
+            try {
+                int first = raw.indexOf(':');
+                int second = raw.indexOf(':', first + 1);
+                if (second == -1) return;
+                String recipient = raw.substring(first + 1, second).trim();
+                String content;
+                int third = raw.indexOf(':', second + 1);
+                if (third == -1) {
+                    // không có msgId
+                    content = raw.substring(second + 1).trim();
+                } else {
+                    // có msgId -> bỏ qua
+                    content = raw.substring(third + 1).trim();
+                }
+
+                String formattedForRecipient = "from:" + clientName + ":" + content;
+                String formattedForSenderLog = "You->" + recipient + ": " + content;
+
+                // Lưu lịch sử của người gửi
+                saveMessageToFile(clientName, formattedForSenderLog);
+
+                // Gửi hoặc xếp hàng đợi
+                ClientHandler target = activeClients.get(recipient);
+                if (target != null && target.isConnected()) {
+                    target.sendMessage(formattedForRecipient);
+                } else {
+                    queueOfflineMessage(recipient, formattedForRecipient);
+                }
+            } catch (Exception ex) {
+                // Bỏ qua lỗi định dạng
+            }
+        }
+
+        private void deliverOfflineMessagesIfAny() {
+            List<String> queued = offlineMessages.remove(clientName);
+            if (queued != null && !queued.isEmpty()) {
+                for (String m : queued) {
+                    sendMessage(m);
                 }
             }
         }
@@ -668,6 +715,13 @@ public class Server {
 
         // Phương thức broadcastMessage đã được loại bỏ vì không cần thiết
         // Tin nhắn từ client chỉ được lưu vào lịch sử chat riêng của client đó
+    }
+
+    private void queueOfflineMessage(String recipient, String message) {
+        offlineMessages.computeIfAbsent(recipient, k -> new ArrayList<>()).add(message);
+        SwingUtilities.invokeLater(() -> {
+            chatArea.append("Queued for " + recipient + ": " + message + "\n");
+        });
     }
 
     // Phương thức main để khởi động server

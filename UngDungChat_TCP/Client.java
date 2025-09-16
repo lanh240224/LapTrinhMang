@@ -18,6 +18,7 @@ public class Client {
     private JTextArea chatArea;        // Khu vực hiển thị tin nhắn và log
     private JTextField inputField;     // Ô nhập tin nhắn từ client
     private JButton sendButton;        // Nút gửi tin nhắn
+    private JComboBox<RecipientItem> recipientSelector; // Chọn người nhận kèm trạng thái
     private JLabel statusLabel;        // Label hiển thị trạng thái kết nối
     private Socket socket;             // Socket kết nối với server
     private PrintWriter out;           // Dòng xuất để gửi tin nhắn
@@ -105,6 +106,15 @@ public class Client {
         JPanel panel = new JPanel(new BorderLayout(10, 0));
         panel.setBorder(new TitledBorder("Send Message"));
         
+        JPanel leftPanel = new JPanel(new BorderLayout(6, 0));
+        JLabel toLabel = new JLabel("To:");
+        recipientSelector = new JComboBox<>();
+        recipientSelector.setRenderer(new RecipientRenderer(false));
+        recipientSelector.setPrototypeDisplayValue(new RecipientItem("Tên ví dụ (Online)", true));
+        recipientSelector.setPreferredSize(new Dimension(180, 28));
+        leftPanel.add(toLabel, BorderLayout.WEST);
+        leftPanel.add(recipientSelector, BorderLayout.CENTER);
+
         inputField = new JTextField();
         inputField.setFont(new Font("Arial", Font.PLAIN, 12));
         inputField.setBorder(BorderFactory.createCompoundBorder(
@@ -119,7 +129,11 @@ public class Client {
         sendButton.setFocusPainted(false);
         sendButton.setPreferredSize(new Dimension(80, 35));
         
-        panel.add(inputField, BorderLayout.CENTER);
+        JPanel center = new JPanel(new BorderLayout(6, 0));
+        center.add(leftPanel, BorderLayout.WEST);
+        center.add(inputField, BorderLayout.CENTER);
+
+        panel.add(center, BorderLayout.CENTER);
         panel.add(sendButton, BorderLayout.EAST);
         
         return panel;
@@ -180,8 +194,25 @@ public class Client {
                                 SwingUtilities.invokeLater(() -> {
                                     chatArea.append(finalMessage.substring(9) + "\n"); 
                                 });
-                            } else if (message.startsWith("clients:")) { // Bỏ qua danh sách client
-                                // Không sử dụng clientSelector
+                            } else if (message.startsWith("clients_status:")) { // Cập nhật danh sách người nhận + trạng thái
+                                String list = message.substring("clients_status:".length());
+                                String[] entries = list.isEmpty() ? new String[0] : list.split(",");
+                                SwingUtilities.invokeLater(() -> {
+                                    recipientSelector.removeAllItems();
+                                    java.util.Set<String> seen = new java.util.HashSet<>();
+                                    for (String e : entries) {
+                                        int bar = e.indexOf('|');
+                                        if (bar > -1) {
+                                            String name = e.substring(0, bar).trim();
+                                            String status = e.substring(bar + 1).trim();
+                                            if (!name.isEmpty() && !name.equals(clientName) && !seen.contains(name)) {
+                                                seen.add(name);
+                                                boolean online = "online".equalsIgnoreCase(status);
+                                                recipientSelector.addItem(new RecipientItem(name, online));
+                                            }
+                                        }
+                                    }
+                                });
                             } else if (message.equals("[History Cleared]")) { 
                                 if (!historyCleared) { // Chỉ hiển thị thông báo một lần
                                     historyCleared = true;
@@ -198,6 +229,17 @@ public class Client {
                                 SwingUtilities.invokeLater(() -> {
                                     chatArea.append(finalMessage + "\n");
                                 });
+                            } else if (message.startsWith("from:")) { // Tin nhắn trực tiếp từ client khác
+                                // Định dạng: from:<sender>:<content>
+                                int first = message.indexOf(':');
+                                int second = message.indexOf(':', first + 1);
+                                if (second > -1) {
+                                    String sender = message.substring(first + 1, second);
+                                    String content = message.substring(second + 1);
+                                    SwingUtilities.invokeLater(() -> {
+                                        chatArea.append(sender + ": " + content + "\n");
+                                    });
+                                }
                             } else {
                                 // Hiển thị tất cả tin nhắn khác (để debug)
                                 SwingUtilities.invokeLater(() -> {
@@ -225,12 +267,56 @@ public class Client {
     // Gửi tin nhắn đến server (chỉ lưu vào lịch sử chat riêng)
     private void sendMessage() {
         String message = inputField.getText().trim(); 
-        if (!message.isEmpty()) {
-            out.println(message);              // Gửi tin nhắn đến server
-            chatArea.append("You: " + message + "\n");
+        RecipientItem selected = (RecipientItem) recipientSelector.getSelectedItem();
+        String recipient = selected == null ? null : selected.name;
+        if (!message.isEmpty() && recipient != null && !recipient.trim().isEmpty()) {
+            String formatted = "to:" + recipient + ":" + message;
+            out.println(formatted);              // Gửi tin nhắn trực tiếp
+            chatArea.append("You->" + recipient + ": " + message + "\n");
             inputField.setText("");
             historyCleared = false; // Reset flag khi gửi tin nhắn mới
         }
+    }
+
+
+    // Item người nhận (tên + trạng thái)
+    private static class RecipientItem {
+        final String name;
+        final boolean online;
+        RecipientItem(String name, boolean online) {
+            this.name = name;
+            this.online = online;
+        }
+        @Override
+        public String toString() {
+            return name + (online ? " (Online)" : " (Offline)");
+        }
+    }
+
+    // Renderer hiển thị trạng thái với chấm màu
+    private static class RecipientRenderer extends DefaultListCellRenderer {
+        private final boolean compact;
+        RecipientRenderer(boolean compact) { this.compact = compact; }
+        @Override
+        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if (value instanceof RecipientItem) {
+                RecipientItem ri = (RecipientItem) value;
+                setText(compact ? ri.name : (ri.name + (ri.online ? " (Online)" : " (Offline)")));
+                setIcon(new ColorIcon(ri.online ? Color.GREEN : Color.RED, 8));
+            }
+            return this;
+        }
+    }
+
+    // Icon màu đơn giản
+    private static class ColorIcon implements Icon {
+        private final Color color;
+        private final int size;
+        ColorIcon(Color color, int size) { this.color = color; this.size = size; }
+        @Override public void paintIcon(Component c, Graphics g, int x, int y) { g.setColor(color); g.fillOval(x, y, size, size); }
+        @Override public int getIconWidth() { return size; }
+        @Override public int getIconHeight() { return size; }
     }
 
     // Phương thức main để khởi động client
