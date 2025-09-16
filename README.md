@@ -27,22 +27,28 @@
 **Client**: cung cấp giao diện để gửi/nhận tin nhắn.  
 **Lưu trữ dữ liệu**: lịch sử chat được lưu vào file văn bản thay vì cơ sở dữ liệu, giúp triển khai đơn giản.  
 Các chức năng chính:  
-**Server**:  
-🔌 Kết nối.  
-💬 Chức năng Chat.  
-📁 Quản lý Lịch sử.  
-🗑️ Xóa Lịch sử.  
-👥 Quản lý Client.  
-**Client**:  
-🔗 Kết nối.  
-💬 Chức năng Chat.  
-📨 Xử lý Tin nhắn.  
-🔄 Quản lý Trạng thái.  
-**Hệ thống**:  
-🌐 Giao thức TCP: Dùng ServerSocket và Socket, hỗ trợ nhiều client qua đa luồng.  
-💾 Lưu trữ Dữ liệu: File I/O (append mode), ghi timestamp bằng LocalDateTime.  
-🛡️ Xử lý Lỗi: Thông báo lỗi trong GUI, debug log, graceful shutdown.
+**🖥️ Chức năng của Server**:  
+Kết nối & Quản lý Client: Lắng nghe các yêu cầu kết nối, tạo luồng riêng cho từng Client, quản lý danh sách Client đang hoạt động.  
+Trung gian phân phối tin nhắn:
 
+    Client gửi tin nhắn → Server nhận.
+    Server chuyển tiếp tin nhắn đến tất cả Client khác.
+    Các Client không giao tiếp trực tiếp mà thông qua Server.  
+    
+Quản lý lịch sử chat: Lưu tin nhắn (có timestamp) vào file văn bản.  
+Xóa lịch sử: Cung cấp chức năng xóa toàn bộ file lưu trữ khi cần.  
+Xử lý lỗi & đóng kết nối: Khi Client ngắt kết nối hoặc lỗi I/O, Server loại bỏ Client khỏi danh sách và tiếp tục phục vụ các Client khác.  
+**💻 Chức năng của Client**:  
+Kết nối Server: Tạo socket đến Server theo IP + port.  
+Gửi tin nhắn: Người dùng nhập nội dung → Client gửi lên Server.  
+Nhận tin nhắn: Client lắng nghe phản hồi từ Server và hiển thị trong giao diện.  
+Giao diện người dùng (GUI): Cửa sổ chat có vùng hiển thị tin nhắn, ô nhập văn bản, nút gửi.  
+Quản lý trạng thái: Hiển thị thông báo khi mất kết nối, xử lý lỗi gửi/nhận.  
+**🌐 Chức năng hệ thống**:  
+Giao thức TCP: Dùng ServerSocket và Socket, hỗ trợ nhiều Client đồng thời nhờ đa luồng.  
+Trung gian quản lý tin nhắn: Server giữ vai trò trung tâm, tất cả trao đổi giữa Client đều đi qua Server.  
+Lưu trữ dữ liệu: File I/O (append mode), ghi kèm thời gian (LocalDateTime).  
+Xử lý lỗi: Hiển thị lỗi trong GUI (Client), ghi log/debug ở Server.
 
 ## 🔧 2. Công nghệ sử dụng
 Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
@@ -75,32 +81,46 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 
 
 <p align="center">
-  <img src="images/anhClientChatServer.jpg" alt="Ảnh 3" width="700"/>
+  <img src="images/AnhClientChatVoiNhau.jpg" alt="Ảnh 3" width="450"/>
 </p>
 <p align="center">
   <em> Hình 3: Hai Client chat với nhau.</em>
 </p>
 
 <p align="center">
-  <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 3" width="500"/>
+  <img src="images/AnhClient1guiTNClient2khioff.jpg" alt="Ảnh 4" width="700"/>
 </p>
 <p align="center">
-  <em> Hình 3: Ảnh lịch sử chat được lưu vào file txt </em>
+  <em> Hình 4: Client Lanh gửi tin nhắn khi Client Hoa offine.</em>
+</p>
+
+<p align="center">
+  <img src="images/AnhClient2nhanDcTnKhiOnl.jpg" alt="Ảnh 5" width="500"/>
+</p>
+<p align="center">
+  <em> Hình 5: Client Hoa nhận được tin nhắn từ Client Lanh khi online.</em>
 </p>
 
 <p align="center">
-    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 4" width="500"/>
+  <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 6 " width="500"/>
 </p>
 <p align="center">
-  <em> Hình 4: Ảnh Server xóa dữ liệu</em>
+  <em> Hình 6: Ảnh lịch sử chat được lưu vào file txt </em>
+</p>
+
+<p align="center">
+    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 7 " width="500"/>
+</p>
+<p align="center">
+  <em> Hình 7: Ảnh Server xóa dữ liệu</em>
 </p>
 
 
 <p align="center">
-  <img src="images/anhServerngatKetNoiClient.jpg" alt="Ảnh 5" width="400"/>
+  <img src="images/anhServerngatKetNoiClient.jpg" alt="Ảnh 8" width="400"/>
 </p>
 <p align="center">
-  <em> Hình 5: Ảnh Server ngắt kết nối với CLient</em>
+  <em> Hình 8: Ảnh Server ngắt kết nối với CLient</em>
 </p>
 
 ## 📝 4. Hướng dẫn cài đặt và sử dụng
@@ -176,6 +196,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
