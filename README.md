@@ -75,6 +75,13 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 
 
 <p align="center">
+  <img src="images/anhClientChatServer.jpg" alt="Ảnh 3" width="700"/>
+</p>
+<p align="center">
+  <em> Hình 3: Hai Client chat với nhau.</em>
+</p>
+
+<p align="center">
   <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 3" width="500"/>
 </p>
 <p align="center">
@@ -169,6 +176,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
