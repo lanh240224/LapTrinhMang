@@ -54,10 +54,10 @@ Các chức năng chính:
 
 ## 🔧 2. Công nghệ sử dụng
 Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
-**Java Core và Multithreading**
-**Java Swing**
+**Java Core và Multithreading**  
+**Java Swing**  
 **Java Sockets**  
-**File I/O**
+**File I/O**  
 **Hỗ trợ**: 
 
     java.util.Date hoặc java.time.LocalDateTime: Tạo timestamp cho mỗi tin nhắn để ghi vào file và hiển thị trên giao diện, giúp người dùng theo dõi thời gian gửi.
@@ -97,7 +97,7 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 </p>
 
 <p align="center">
-  <img src="images/AnhClient2nhanDcTnKhiOnl.jpg" alt="Ảnh 5" width="500"/>
+  <img src="images/AnhClient2nhanDcTnKhiOnl.jpg" alt="Ảnh 5" width="400"/>
 </p>
 <p align="center">
   <em> Hình 5: Client Hoa nhận được tin nhắn từ Client Lanh khi online.</em>
@@ -111,7 +111,7 @@ Không sử dụng thư viện bên ngoài, đảm bảo ứng dụng nhẹ và 
 </p>
 
 <p align="center">
-    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 7 " width="500"/>
+    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 7 " width="400"/>
 </p>
 <p align="center">
   <em> Hình 7: Ảnh Server xóa dữ liệu</em>
@@ -198,6 +198,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
