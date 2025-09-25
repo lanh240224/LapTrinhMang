@@ -168,7 +168,7 @@ Các công nghệ được sử dụng để xây dựng ứng dụng chat Clien
 ```bash
 java UngDungChat_TCP.Server
 ```
-- Server sẽ khởi động trên port mặc định (1234)
+- Server sẽ khởi động trên port 5000
 - Giao diện server sẽ hiển thị, sẵn sàng nhận kết nối từ client
 - Server sẽ tạo file `chat_history.txt` để lưu lịch sử chat
 
@@ -197,6 +197,7 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
 
 
 
