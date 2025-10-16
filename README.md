@@ -1,4 +1,3 @@
-
 <h2 align="center">
     <a href="https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin">
     🎓 Faculty of Information Technology (DaiNam University)
@@ -22,46 +21,55 @@
 
 
 ## 📖 1. Giới thiệu hệ thống
-Ứng dụng chat Client-Server sử dụng giao thức TCP cho phép nhiều người dùng giao tiếp thời gian thực qua mạng.  
-**Server**: đóng vai trò trung tâm, quản lý kết nối và chuyển tiếp tin nhắn.  
-**Client**: cung cấp giao diện để gửi/nhận tin nhắn.  
-**Lưu trữ dữ liệu**: lịch sử chat được lưu vào file văn bản thay vì cơ sở dữ liệu, giúp triển khai đơn giản.  
-Các chức năng chính:  
-**🖥️ Chức năng của Server**:  
-1. Kết nối & Quản lý Client: Lắng nghe các yêu cầu kết nối, tạo luồng riêng cho từng Client, quản lý danh sách Client đang hoạt động.  
-2. Trung gian phân phối tin nhắn:
+Ứng dụng chat Client-Server hiện đại sử dụng giao thức TCP với giao diện Java Swing, hỗ trợ nhiều tính năng tiên tiến cho việc giao tiếp thời gian thực qua mạng.  
 
-    Client gửi tin nhắn → Server nhận.
-    Server chuyển tiếp tin nhắn đến tất cả Client khác.
-    Các Client không giao tiếp trực tiếp mà thông qua Server.  
-    
-3. Quản lý lịch sử chat: Lưu tin nhắn (có timestamp) vào file văn bản.  
-4. Xóa lịch sử: Cung cấp chức năng xóa toàn bộ file lưu trữ khi cần.  
-5. Xử lý lỗi & đóng kết nối: Khi Client ngắt kết nối hoặc lỗi I/O, Server loại bỏ Client khỏi danh sách và tiếp tục phục vụ các Client khác.
+**🏗️ Kiến trúc hệ thống**:  
+- **Server**: Đóng vai trò trung tâm với giao diện admin chuyên nghiệp, quản lý kết nối và chuyển tiếp tin nhắn giữa các client
+- **Client**: Giao diện chat hiện đại với bubble messages, hỗ trợ đa phương tiện và tương tác phong phú
+- **Authentication**: Hệ thống xác thực admin với mã hóa SHA-256, đảm bảo bảo mật
+- **Lưu trữ dữ liệu**: Lịch sử chat được lưu vào file văn bản với timestamp chính xác đến phút
 
-**💻 Chức năng của Client**:  
-1. Kết nối Server: Tạo socket đến Server theo IP + port.  
-2. Gửi tin nhắn: Người dùng nhập nội dung → Client gửi lên Server.  
-3. Nhận tin nhắn: Client lắng nghe phản hồi từ Server và hiển thị trong giao diện.  
-4. Giao diện người dùng (GUI): Cửa sổ chat có vùng hiển thị tin nhắn, ô nhập văn bản, nút gửi.  
-5. Quản lý trạng thái: Hiển thị thông báo khi mất kết nối, xử lý lỗi gửi/nhận.
+**🎯 Các chức năng chính**:  
 
-**🌐 Chức năng hệ thống**:  
-1. Giao thức TCP: Dùng ServerSocket và Socket, hỗ trợ nhiều Client đồng thời nhờ đa luồng.  
-2. Trung gian quản lý tin nhắn: Server giữ vai trò trung tâm, tất cả trao đổi giữa Client đều đi qua Server.  
-3. Lưu trữ dữ liệu: File I/O (append mode), ghi kèm thời gian (LocalDateTime).  
-4. Xử lý lỗi: Hiển thị lỗi trong GUI (Client), ghi log/debug ở Server.
+**🖥️ Server (Admin Interface)**:  
+- 🔐 **Admin Authentication**: Đăng nhập/đăng ký admin với giao diện khoa học, chuyên nghiệp
+- 🔌 **Connection Management**: Quản lý kết nối real-time của các client
+- 💬 **Message Routing**: Chuyển tiếp tin nhắn, file, ảnh, voice giữa các client
+- 📁 **History Management**: Quản lý và xóa lịch sử chat với giao diện tabbed
+- 👥 **Client Monitoring**: Hiển thị danh sách client online/offline và admin đã đăng nhập
+- 🎨 **Modern UI**: Giao diện bubble chat với màu sắc hiện đại, message panel responsive
+
+**💻 Client (User Interface)**:  
+- 🔗 **Smart Connection**: Kết nối tự động với server, hiển thị trạng thái real-time
+- 💬 **Rich Chat**: Bubble messages với timestamp, hỗ trợ emoji và text formatting
+- 📎 **File Transfer**: Gửi/nhận file với preview dialog, hỗ trợ tất cả định dạng
+- 🖼️ **Image Sharing**: Gửi/nhận ảnh với thumbnail preview, auto-resize
+- 🎤 **Voice Chat**: Ghi âm và gửi voice message, playback với audio controls
+- 😀 **Avatar System**: Thay đổi avatar với 100+ emoji options
+- 📱 **Contact Management**: Danh sách contact với trạng thái online/offline
+- 💾 **Local History**: Lưu trữ lịch sử chat local, persistent across sessions
+
+**⚙️ Hệ thống kỹ thuật**:  
+- 🌐 **TCP Protocol**: ServerSocket và Socket với multithreading, hỗ trợ nhiều client đồng thời
+- 🔄 **Message Queuing**: Hàng đợi tin nhắn offline, đảm bảo không mất dữ liệu
+- 💾 **Data Persistence**: File I/O với UTF-8 encoding, timestamp chính xác
+- 🛡️ **Error Handling**: Xử lý lỗi graceful với thông báo user-friendly
+- 🎨 **Modern UI**: Java Swing với custom rendering, hover effects, responsive design
+- 🔧 **Modular Architecture**: Code được tổ chức thành các module riêng biệt, dễ maintain và extend
+
 
 ## 🔧 2. Công nghệ sử dụng
-Các công nghệ được sử dụng để xây dựng ứng dụng chat Client-Server sử dụng TCP với Java Swing  
-**Java Core và Multithreading**  
-**Java Swing**  
-**Java Sockets**  
-**File I/O**  
-**Hỗ trợ**: 
+Ứng dụng được xây dựng hoàn toàn bằng **Java Core** không sử dụng thư viện bên ngoài:
 
-    java.util.Date hoặc java.time.LocalDateTime: Tạo timestamp cho mỗi tin nhắn để ghi vào file và hiển thị trên giao diện, giúp người dùng theo dõi thời gian gửi.
-    ArrayList: Quản lý danh sách các client đang kết nối trên server (lưu trữ PrintWriter hoặc DataOutputStream của từng client) để broadcast tin nhắn. Có thể mở rộng để lưu danh sách tên người dùng và trạng thái online/offline.
+- **☕ Java 8+**: Multithreading với `Thread`, `ConcurrentHashMap`, `AtomicBoolean`
+- **🎨 Java Swing**: UI components, custom rendering, event handling
+- **🌐 TCP Sockets**: `ServerSocket` (port 12345), `Socket`, `PrintWriter`, `BufferedReader`
+- **💾 File I/O**: UTF-8 encoding, Base64 cho file transfer, `JFileChooser`
+- **🎵 Audio API**: `javax.sound.sampled.*` cho voice recording/playback
+- **🔐 Security**: SHA-256 password hashing, serialization cho admin data
+- **📊 Data**: `ArrayList`, `HashMap`, custom classes, `SimpleDateFormat`
+
+**✨ Lightweight & Portable**: Chỉ sử dụng Java Standard Library, dễ triển khai trên mọi môi trường.
 
 ## 🚀 3. Hình ảnh các chức năng
 
@@ -82,111 +90,54 @@ Các công nghệ được sử dụng để xây dựng ứng dụng chat Clien
 
 
 <p align="center">
-  <img src="images/AnhClientChatVoiNhau.jpg" alt="Ảnh 3" width="450"/>
+  <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 3" width="500"/>
 </p>
 <p align="center">
-  <em> Hình 3: Hai Client chat với nhau.</em>
-</p>
-
-<p align="center">
-  <img src="images/AnhClient1guiTNClient2khioff.jpg" alt="Ảnh 4" width="700"/>
-</p>
-<p align="center">
-  <em> Hình 4: Client Lanh gửi tin nhắn khi Client Hoa offine.</em>
+  <em> Hình 3: Ảnh lịch sử chat được lưu vào file txt </em>
 </p>
 
 <p align="center">
-  <img src="images/AnhClient2nhanDcTnKhiOnl.jpg" alt="Ảnh 5" width="400"/>
+    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 4" width="500"/>
 </p>
 <p align="center">
-  <em> Hình 5: Client Hoa nhận được tin nhắn từ Client Lanh khi online.</em>
-</p>
-
-<p align="center">
-  <img src="images/anhLichSuChatLuuTxt.jpg" alt="Ảnh 6 " width="500"/>
-</p>
-<p align="center">
-  <em> Hình 6: Ảnh lịch sử chat được lưu vào file txt </em>
-</p>
-
-<p align="center">
-    <img src="images/anhServerxoaDL.jpg" alt="Ảnh 7 " width="400"/>
-</p>
-<p align="center">
-  <em> Hình 7: Ảnh Server xóa dữ liệu</em>
+  <em> Hình 4: Ảnh Server xóa dữ liệu</em>
 </p>
 
 
 <p align="center">
-  <img src="images/anhServerngatKetNoiClient.jpg" alt="Ảnh 8" width="400"/>
+  <img src="images/anhServerngatKetNoiClient.jpg" alt="Ảnh 5" width="400"/>
 </p>
 <p align="center">
-  <em> Hình 8: Ảnh Server ngắt kết nối với CLient</em>
+  <em> Hình 5: Ảnh Server ngắt kết nối với CLient</em>
 </p>
 
 ## 📝 4. Hướng dẫn cài đặt và sử dụng
 
 ### 🔧 Yêu cầu hệ thống
+- **JDK 8+** (khuyến nghị JDK 11+)
+- **RAM**: Tối thiểu 1GB
+- **OS**: Windows 10+, macOS 10.14+, Linux Ubuntu 18.04+
+- **Audio**: Microphone/speakers (tùy chọn cho voice chat)
 
-- **Java Development Kit (JDK)**: Phiên bản 8 trở lên
-- **Hệ điều hành**: Windows, macOS, hoặc Linux
-- **Môi trường phát triển**: IDE (IntelliJ IDEA, Eclipse, VS Code) hoặc terminal/command prompt
-- **Bộ nhớ**: Tối thiểu 512MB RAM
-- **Dung lượng**: Khoảng 10MB cho mã nguồn và file thực thi
-
-### 📦 Cài đặt và triển khai
-
-#### Bước 1: Chuẩn bị môi trường
-1. **Kiểm tra Java**: Mở terminal/command prompt và chạy:
-   ```bash
-   java -version
-   javac -version
-   ```
-   Đảm bảo cả hai lệnh đều hiển thị phiên bản Java 8 trở lên.
-
-2. **Tải mã nguồn**: Sao chép thư mục `UngDungChat_TCP` chứa các file:
-   - `Server.java`
-   - `Client.java`
-
-#### Bước 2: Biên dịch mã nguồn
-1. **Mở terminal** và điều hướng đến thư mục chứa mã nguồn
-2. **Biên dịch các file Java**:
-   ```bash
-   javac UngDungChat_TCP/*.java
-   ```
-   Hoặc biên dịch từng file riêng lẻ:
-   ```bash
-   javac UngDungChat_TCP/Server.java
-   javac UngDungChat_TCP/Client.java
-   ```
-
-3. **Kiểm tra kết quả**: Nếu biên dịch thành công, sẽ tạo ra các file `.class` tương ứng.
-
-#### Bước 3: Chạy ứng dụng
-
-**Khởi động Server:**
+### 📦 Cài đặt nhanh
 ```bash
+# 1. Kiểm tra Java
+java -version && javac -version
+
+# 2. Biên dịch
+javac UngDungChat_TCP/*.java
+# 3. Chạy Server (bắt buộc trước)
 java UngDungChat_TCP.Server
-```
-- Server sẽ khởi động trên port 5000
-- Giao diện server sẽ hiển thị, sẵn sàng nhận kết nối từ client
-- Server sẽ tạo file `chat_history.txt` để lưu lịch sử chat
 
-**Khởi động Client:**
-```bash
+# 4. Chạy Client (terminal mới)
 java UngDungChat_TCP.Client
 ```
-- Mở terminal mới cho mỗi client
-- Nhập tên người dùng khi được yêu cầu (ví dụ: "Lanh", "Hoa", "Minh")
-- Client sẽ kết nối đến server và hiển thị giao diện chat
 
-### 🚀 Sử dụng ứng dụng
+### 🚀 Sử dụng
+**🖥️ Server**: Đăng nhập admin → Quản lý client → Gửi tin nhắn  
+**💻 Client**: Nhập tên → Chọn contact → Chat với file/ảnh/voice/avatar
 
-1. **Kết nối**: Client tự động kết nối đến server sau khi nhập tên
-2. **Gửi tin nhắn**: Gõ tin nhắn vào ô nhập và nhấn Enter hoặc nút "Gửi"
-3. **Nhận tin nhắn**: Tin nhắn từ các client khác sẽ hiển thị trong khu vực chat
-4. **Lịch sử chat**: Server tự động lưu tất cả tin nhắn vào file `chat_history.txt`
-5. **Ngắt kết nối**: Đóng cửa sổ client hoặc nhấn Ctrl+C để ngắt kết nối
+**✨ Tính năng**: File transfer, image sharing, voice chat, avatar system, offline messages, modern UI
 
 
 ## Thông tin liên hệ  
@@ -197,14 +148,3 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
-
-
-
-
-
-
-
-
-
-
-
