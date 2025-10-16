@@ -82,10 +82,10 @@
 </p>
 
 <p align="center">
-  <img src="images/anhClientChatServer.jpg" alt="Ảnh 2" width="700"/>
+  <img src="images/anhClientChatServer1.jpg" alt="Ảnh 2" width="700"/>
 </p>
 <p align="center">
-  <em> Hình 2: Client chat với Server</em>
+  <em> Hình 2: Client chat với nhau</em>
 </p>
 
 
@@ -148,3 +148,4 @@ Email: lananh.2402.nt@gmail.com.
 © 2025 AIoTLab, Faculty of Information Technology, DaiNam University. All rights reserved.
 
 ---
+
